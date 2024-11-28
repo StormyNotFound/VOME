@@ -1,27 +1,26 @@
-# OSC Chat Tools 
-An osc script I made for Vrchat. Now with UI!
+# VRChat OSC Message Editor 
+A fork of OCT for multi distro support new UI and new features!
 - Feature Requests are encouraged. You need something added? Let me know
 
 ![Preview](https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/preview.png)
 
-OCT Is a standalone program used for interacting with Vrchat's OSC to send chat messages to the chatbox as well as other data in some cases
+VOME Is a standalone program used for interacting with Vrchat's OSC to send chat messages to the chatbox as well as other data in some cases
 
 # Having Issues? 
- - Read the [FAQ](https://github.com/Lioncat6/OSC-Chat-Tools/wiki/FAQ)
- - Message me on discord https://discord.gg/invite/hWCuPXvq66
- - Create an issue https://github.com/Lioncat6/OSC-Chat-Tools/issues
+ - Read the [FAQ](https://github.com/StormyNotFound/VOME/wiki/FAQ)
+ - Create an issue https://github.com/StormyNotFound/VOME/issues
 
 # Guides: (More Coming Soon)
- - [Quick Start Guide](https://github.com/Lioncat6/OSC-Chat-Tools/wiki/OCT-Quick-Start-Guide)
- - [Connecting to Spotify](https://github.com/Lioncat6/OSC-Chat-Tools/wiki/Connecting-to-Spotify)
-   - [Obtaining a Spotify client ID](https://github.com/Lioncat6/OSC-Chat-Tools/wiki/Spotify-Client-ID)
- - [Connecting to Pulsoid](https://github.com/Lioncat6/OSC-Chat-Tools/wiki/Connecting-to-Pulsoid)
+ - [Quick Start Guide](https://github.com/StormyNotFound/VOME/wiki/OCT-Quick-Start-Guide)
+ - [Connecting to Spotify](https://github.com/StormyNotFound/VOME/wiki/Connecting-to-Spotify)
+   - [Obtaining a Spotify client ID](https://github.com/StormyNotFound/VOME/wiki/Spotify-Client-ID)
+ - [Connecting to Pulsoid](https://github.com/StormyNotFound/VOME/wiki/Connecting-to-Pulsoid)
 
 # Features
  - Fully customizable layout with divider and newline toggles
  - Animated text
  - Current time
- - Song info using the Windows media manager and now the [Spotify](https://spotify.com/) API!
+ - Song info using the Windows media manager and now the [Spotify](https://spotify.com/) API! (currently working on support for linux)
  - CPU Info
  - RAM Info
  - Heart rate info using [Pulsoid](https://pulsoid.net/) or [HypeRate](https://www.hyperate.io/) 
@@ -34,7 +33,7 @@ OCT Is a standalone program used for interacting with Vrchat's OSC to send chat 
 
 # Installation:
 ## Exe file
- - https://github.com/Lioncat6/OSC-Chat-Tools/releases/latest
+ - https://github.com/StormyNotFound/VOME/releases/latest
  - Windows SmartScreen will complain due to it not being signed
 
 ## Build it yourself
@@ -81,6 +80,7 @@ All keyboard shortcuts can be rebound
  - https://www.youtube.com/watch?v=8D23oUzb-0Q
 
 # Coming soon:
+ - Linux support. (In the works)
  - Code refactor (In the works)
  - Modular plugins system to replace hardcoded objects
  - Switch to a different ui, most likely to py-qt
@@ -88,4 +88,4 @@ All keyboard shortcuts can be rebound
  - Framerate
  - Ping
  - VR/Desktop Display
- - Other fun shit!
+ - Other fun stuff!
