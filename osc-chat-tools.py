@@ -332,7 +332,7 @@ def update_checker(a):
   global outOfDate
   global windowAccess
   global version
-  url = 'https://api.github.com/repos/Lioncat6/OSC-Chat-Tools/releases'
+  url = 'https://api.github.com/repos/StormyNotFound/VOME/releases'
   try:
     response = requests.get(url)
     if response.ok:
