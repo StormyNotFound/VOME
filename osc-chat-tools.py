@@ -17,9 +17,6 @@ import keyboard
 import asyncio
 import psutil
 import webbrowser
-from winsdk.windows.media.control import \
-    GlobalSystemMediaTransportControlsSessionManager as MediaManager
-import winsdk.windows.media.control as wmc
 from websocket import create_connection # websocket-client
 from pythonosc.dispatcher import Dispatcher
 from pythonosc import osc_server
@@ -38,7 +35,7 @@ from tendo import singleton
 
 run = True
 playMsg = True
-version = "1.5.15"
+version = "1.0.0"
 
 #Deprecated Variables
 deprecated_topTextToggle = False #Deprecated, only in use for converting old save files
@@ -113,7 +110,7 @@ spotifySongDisplay =  '🎵\'{title}\' ᵇʸ {artist}🎶 『{song_progress}/{so
 
 spotifyAccessToken = ''
 spotifyRefreshToken = ''
-spotify_client_id = '915e1de141b3408eb430d25d0d39b380'
+spotify_client_id = ''
 
 pulsoidToken = '' 
 usePulsoid = True
@@ -210,14 +207,14 @@ nameToReturn = ''
 try:
     me = singleton.SingleInstance() #also me (who's single)
 except:
-    ctypes.windll.user32.MessageBoxW(None, u"OSC Chat Tools is already running!.", u"OCT is already running!", 16)
+    ctypes.windll.user32.MessageBoxW(None, u"VRChat OSC Message editor is already running!.", u"OCT is already running!", 16)
     run = False
     os._exit(0)
 
 def fatal_error(error = None):
   global run
   run = False
-  ctypes.windll.user32.MessageBoxW(None, u"OSC Chat Tools has encountered a fatal error.", u"OCT Fatal Error", 16)
+  ctypes.windll.user32.MessageBoxW(None, u"VRChat OSC Message editor has encountered a fatal error.", u"OCT Fatal Error", 16)
   if error != None:
     result = ctypes.windll.user32.MessageBoxW(None, u"The program crashed with an error message. Would you like to copy it to your clipboard?", u"OCT Fatal Error", 3 + 64)
     if result == 6:
@@ -319,12 +316,12 @@ def outputLog(text):
     outputQueueHandler = Thread(target=outputQueue)
     outputQueueHandler.start()
 
-outputLog("OCT Starting...")
+outputLog("VOME Starting...")
 
 
 try:
-  if not os.path.isfile('please-do-not-delete.txt'):
-    with open('please-do-not-delete.txt', 'w', encoding="utf-8") as f:
+  if not os.path.isfile('Settings.json'):
+    with open('Settings.json', 'w', encoding="utf-8") as f:
         f.write('[]')
 except Exception as e:
   outputLog("Failed to create settings file "+str(e))
@@ -432,8 +429,8 @@ confDataDict = { #this dictionary will always exclude position 0 which is the co
   
 }
 
-if os.path.isfile('please-do-not-delete.txt'):
-  with open('please-do-not-delete.txt', 'r', encoding="utf-8") as f:
+if os.path.isfile('Settings.json'):
+  with open('Settings.json', 'r', encoding="utf-8") as f:
     try:
       fixed_list = ast.literal_eval(f.read())
       if type(fixed_list[0]) is str:
@@ -819,7 +816,7 @@ def uiThread():
   text_conf_layout = [
     [sg.Column([
                   [sg.Text('Text to display for the message. One frame per line\nTo send a blank frame, use an asterisk(*) by itself on a line.\n\\n and \\v are respected.', justification='center')],
-                  [sg.Multiline(default_text='OSC Chat Tools\nBy Lioncat6',
+                  [sg.Multiline(default_text='VRChat OSC Message editor\nBy Lioncat6',
                       size=(50, 10), key='messageInput')]
     ], size=(379, 240))],
   ]
@@ -1070,11 +1067,11 @@ def uiThread():
       ],
       [sg.Button('Apply', tooltip='Apply all changes to options'), sg.Button('Reset', tooltip='Resets all variables to their default values'), sg.Text(" Version "+str(version), key='versionText'), sg.Checkbox('Run?', default=True, key='runThing', enable_events= True, background_color='peru', tooltip='Toggles the run state of OCT'), sg.Checkbox('AFK', default=False, key='afk', enable_events= True, background_color='#cb7cef', tooltip='Toggles AFK message, can be set to automatic in the options tab'), sg.Push(), sg.Text("⏸️", key='spotifyPlayStatus', font = ('Helvetica', 11), visible=False, pad=(0, 0)), sg.Text("---", key='spotifySongName', enable_events=True, font = ('Helvetica', 11, 'underline'), visible=False, pad=(0, 0)), sg.Text("『00:00/00:00』", key='spotifyDuration', font = ('Helvetica', 11), visible=False, pad=(0, 0)), spotifyLogo]]
 
-  window = sg.Window('OSC Chat Tools', layout,
+  window = sg.Window('VRChat OSC Message editor', layout,
                   default_element_size=(12, 1), resizable=True, finalize= True, size=(900, 620), right_click_menu=right_click_menu, icon="osc-chat-tools.exe", titlebar_icon="osc-chat-tools.exe")
   window.set_min_size((500, 350))
   def resetVars():
-    window['messageInput'].update(value='OSC Chat Tools\nBy Lioncat6')
+    window['messageInput'].update(value='VRChat OSC Message editor\nBy Lioncat6')
     window['msgDelay'].update(value=1.5)
     window['songDisplay'].update(value=' 🎵\'{title}\' ᵇʸ {artist}🎶')
     window['showOnChange'].update(value=False)
@@ -1178,7 +1175,7 @@ def uiThread():
     
     global useTimeParameters
     global removeParenthesis
-    if os.path.isfile('please-do-not-delete.txt'):
+    if os.path.isfile('Settings.json'):
       try:
         window['msgDelay'].update(value=message_delay)
         window['messageInput'].update(value=messageString)
@@ -1363,7 +1360,7 @@ def uiThread():
           useTimeParameters = values['useTimeParameters']
           removeParenthesis = values['removeParenthesis']
           try:
-            with open('please-do-not-delete.txt', 'w', encoding="utf-8") as f:
+            with open('Settings.json', 'w', encoding="utf-8") as f:
               f.write(str([confVersion, message_delay, messageString, FileToRead, scrollText, hideSong, hideOutside, showPaused, songDisplay, showOnChange, songChangeTicks, minimizeOnStart, keybind_run, keybind_afk,topBar, middleBar, bottomBar, pulsoidToken, avatarHR, blinkOverride, blinkSpeed, useAfkKeybind, toggleBeat, updatePrompt, oscListenAddress, oscListenPort, oscSendAddress, oscSendPort, oscForewordAddress, oscForeword, oscListen, oscForeword, logOutput, layoutString, verticalDivider,cpuDisplay, ramDisplay, gpuDisplay, hrDisplay, playTimeDisplay, mutedDisplay, unmutedDisplay, darkMode, sendBlank, suppressDuplicates, sendASAP,useMediaManager, useSpotifyApi, spotifySongDisplay, spotifyAccessToken, spotifyRefreshToken, usePulsoid, useHypeRate, hypeRateKey, hypeRateSessionId, timeDisplayPM, timeDisplayAM, showSongInfo, spotify_client_id, useTimeParameters, removeParenthesis]))
           except Exception as e:
             sg.popup('Error saving config to file:\n'+str(e))
@@ -1373,7 +1370,7 @@ def uiThread():
       if event == 'Open Github Page':
         webbrowser.open('https://github.com/Lioncat6/OSC-Chat-Tools')
       if event == 'About':
-        about_popop_layout =  [[sg.Text('OSC Chat Tools by', font=('Arial', 11, 'bold'), pad=(0, 20)), sg.Text('Lioncat6', font=('Arial', 12, 'bold'))],[sg.Text('Modules Used:',font=('Arial', 11, 'bold'))], [sg.Text('- PySimpleGUI\n - argparse\n - datetime\n - pythonosc (udp_client)\n - keyboard\n - asyncio\n - psutil\n - webbrowser\n - winsdk (windows.media.control)\n - websocket-client\n - pyperclip')], [sg.Button('Ok')]]
+        about_popop_layout =  [[sg.Text('VRChat OSC Message editor by', font=('Arial', 11, 'bold'), pad=(0, 20)), sg.Text('Lioncat6', font=('Arial', 12, 'bold'))],[sg.Text('Modules Used:',font=('Arial', 11, 'bold'))], [sg.Text('- PySimpleGUI\n - argparse\n - datetime\n - pythonosc (udp_client)\n - keyboard\n - asyncio\n - psutil\n - webbrowser\n - winsdk (windows.media.control)\n - websocket-client\n - pyperclip')], [sg.Button('Ok')]]
         about_window = sg.Window('About', about_popop_layout, keep_on_top=True)
         event, values = about_window.read()
         about_window.close()
@@ -1395,9 +1392,9 @@ def uiThread():
       if event == 'runThing':
         msgPlayToggle()
       if event == 'Open Config File':
-        if os.path.isfile('please-do-not-delete.txt'):
+        if os.path.isfile('Settings.json'):
           try:
-            os.system("start "+ 'please-do-not-delete.txt')
+            os.system("start "+ 'Settings.json')
           except Exception as e:
             sg.Popup('Error opening config file: '+e)
         else:
@@ -2331,7 +2328,7 @@ if __name__ == "__main__":
           if "\v" in msgOutput[-2:]:
             msgOutput = msgOutput[:-1]
           if not hideOutside:
-            msgOutput = topBar + " "+ msgOutput + " " +bottomBar 
+            msgOutput = topBar + " "+ msgOutput + " " +bottomBar
           msgOutput = msgOutput.replace("\\n", "\v").replace("\\v", "\v")
         msgGen(a)
       elif afk:
@@ -2570,7 +2567,7 @@ def linkSpotify():
         shutdownThread = Thread(target=shutdown).start()
         cancelLink = True
         nameToReturn = 'Error'
-        return """<!DOCTYPE html> <html> <head> <title>OSC Chat Tools | Spotify Authorization</title> <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> </head> <body> <style> body { font-family: sans-serif; background-color: darkslategrey; color: whitesmoke; } .mainbox { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); } h1 { text-align: center; } p { text-align: center; } img { display: block; margin-left: auto; margin-right: auto; width: 50%; } </style> <div class="mainbox"> <img src="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> <h1 class="maintext">Authorization Failed</h1><p class="subtext">If you did not cancel the authentication at the previous screen please submit a bug report at <a href='https://github.com/Lioncat6/OSC-Chat-Tools/issues'>https://github.com/Lioncat6/OSC-Chat-Tools/issues</a></p><div><p>Full error:<b style="color:red;"> """+str(request.args.get('error'))+""" </b></p></div> </div> </body> </html>"""
+        return """<!DOCTYPE html> <html> <head> <title>VRChat OSC Message editor | Spotify Authorization</title> <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> </head> <body> <style> body { font-family: sans-serif; background-color: darkslategrey; color: whitesmoke; } .mainbox { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); } h1 { text-align: center; } p { text-align: center; } img { display: block; margin-left: auto; margin-right: auto; width: 50%; } </style> <div class="mainbox"> <img src="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> <h1 class="maintext">Authorization Failed</h1><p class="subtext">If you did not cancel the authentication at the previous screen please submit a bug report at <a href='https://github.com/Lioncat6/OSC-Chat-Tools/issues'>https://github.com/Lioncat6/OSC-Chat-Tools/issues</a></p><div><p>Full error:<b style="color:red;"> """+str(request.args.get('error'))+""" </b></p></div> </div> </body> </html>"""
       try:   
         code = request.args.get('code')
         #print('Authorization code:', code)
@@ -2608,13 +2605,13 @@ def linkSpotify():
         shutdownThread = Thread(target=shutdown).start()
         nameToReturn = profile.get('display_name')
         outputLog("Spotify linked to "+nameToReturn+" successfully!")
-        return """<!DOCTYPE html> <html> <head> <title>OSC Chat Tools | Spotify Authorization</title> <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> </head> <body> <style> body { font-family: sans-serif; background-color: darkslategrey; color: whitesmoke; } .mainbox { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); } h1 { text-align: center; } p { text-align: center; } img { display: block; margin-left: auto; margin-right: auto; width: 50%; } </style> <div class="mainbox"> <img src="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> <h1 class="maintext">Authorization Successful</h1><p class="subtext">You can now close this tab and return to OCT</p> <div><p>Linked to:<b style="color:green;"> """+profile.get('display_name')+""" </b></p></div> </div> </body> </html>"""
+        return """<!DOCTYPE html> <html> <head> <title>VRChat OSC Message editor | Spotify Authorization</title> <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> </head> <body> <style> body { font-family: sans-serif; background-color: darkslategrey; color: whitesmoke; } .mainbox { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); } h1 { text-align: center; } p { text-align: center; } img { display: block; margin-left: auto; margin-right: auto; width: 50%; } </style> <div class="mainbox"> <img src="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> <h1 class="maintext">Authorization Successful</h1><p class="subtext">You can now close this tab and return to OCT</p> <div><p>Linked to:<b style="color:green;"> """+profile.get('display_name')+""" </b></p></div> </div> </body> </html>"""
       except Exception as e:
         shutdownThread = Thread(target=shutdown).start()
         cancelLink = True
         nameToReturn = 'Error'
         outputLog('Spotify Link Error: '+str(e))
-        return """<!DOCTYPE html> <html> <head> <title>OSC Chat Tools | Spotify Authorization</title> <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> </head> <body> <style> body { font-family: sans-serif; background-color: darkslategrey; color: whitesmoke; } .mainbox { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); } h1 { text-align: center; } p { text-align: center; } img { display: block; margin-left: auto; margin-right: auto; width: 50%; } </style> <div class="mainbox"> <img src="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> <h1 class="maintext">Authorization Failed</h1><p class="subtext">If you did not cancel the authentication at the previous screen please submit a bug report at <a href='https://github.com/Lioncat6/OSC-Chat-Tools/issues'>https://github.com/Lioncat6/OSC-Chat-Tools/issues</a></p><div><p>Full error:<b style="color:red;"> """+str(e)+""" </b></p></div> </div> </body> </html>"""
+        return """<!DOCTYPE html> <html> <head> <title>VRChat OSC Message editor | Spotify Authorization</title> <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> </head> <body> <style> body { font-family: sans-serif; background-color: darkslategrey; color: whitesmoke; } .mainbox { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); } h1 { text-align: center; } p { text-align: center; } img { display: block; margin-left: auto; margin-right: auto; width: 50%; } </style> <div class="mainbox"> <img src="https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/oscicon.ico"> <h1 class="maintext">Authorization Failed</h1><p class="subtext">If you did not cancel the authentication at the previous screen please submit a bug report at <a href='https://github.com/Lioncat6/OSC-Chat-Tools/issues'>https://github.com/Lioncat6/OSC-Chat-Tools/issues</a></p><div><p>Full error:<b style="color:red;"> """+str(e)+""" </b></p></div> </div> </body> </html>"""
   
   webbrowser.open_new(spotify_auth_url)
   
@@ -2655,8 +2652,8 @@ def runmsg():
           sendMsg(" "+x)
         
     elif afk:
+      sendMsg('\vBe right back! :3\v')
       sendMsg('\vAFK\v')
-      sendMsg('\vㅤ\v')
     elif scrollText:
       try:
         fileToOpen = open(FileToRead, "r", encoding="utf-8")
@@ -2721,34 +2718,6 @@ def restartMsg():
   msgThread = Thread(target=runmsg)
   msgThread.start()
 
-
-def vrcRunningCheck():
-  global vrcPID
-  global playTimeDat
-  def pid_check(pid):
-    try:
-      if psutil.pid_exists(vrcPID):
-        return True
-      else:
-        return False
-    except:
-      return False
-  while run:
-    if not pid_check(vrcPID): 
-      vrcPID = None
-      for proc in psutil.process_iter():
-          if not run:
-            break
-          if "VRChat.exe" in proc.name():
-              vrcPID = proc.pid
-              break
-          time.sleep(.01)
-      playTimeDat = time.mktime(time.localtime(psutil.Process(vrcPID).create_time()))
-    time.sleep(1)
-
-
-vrcRunningCheckThread = Thread(target=vrcRunningCheck)
-vrcRunningCheckThread.start()
 msgThread = Thread(target=runmsg)
 msgThread.start()
 mainUI = Thread(target=uiThread)

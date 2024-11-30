@@ -1,0 +1,13 @@
+PySimpleGUI
+argparse
+datetime
+python-osc
+keyboard
+asyncio
+psutil
+websocket-client
+pyperclip
+pynvml
+tendo
+requests
+flask
