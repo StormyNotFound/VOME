@@ -1,5 +1,7 @@
 # VRChat OSC Message Editor 
+### Very broken right now. Missing most features as it is currently being rewritten for linux.
 A fork of OCT for multi distro support new UI and new features!
+
 - Feature Requests are encouraged. You need something added? Let me know
 
 ![Preview](https://raw.githubusercontent.com/Lioncat6/OSC-Chat-Tools/main/preview.png)
@@ -56,7 +58,8 @@ All keyboard shortcuts can be rebound
  - https://www.youtube.com/watch?v=8D23oUzb-0Q
 
 # Coming soon:
- - Linux support. (In the works)
+ - Windows support (In the works)
+ - Mac support (Not started)
  - Code refactor (In the works)
  - Modular plugins system to replace hardcoded objects
  - Switch to a different ui, most likely to py-qt
